@@ -5,18 +5,18 @@ const MultiPageHealthTool = () => {
   const [currentPage, setCurrentPage] = useState('medicine');
   
   
-  const [selectedMedication, setSelectedMedication] = useState(" ");
-  const [dosage, setDosage] = useState(" ");
+  const [selectedMedication, setSelectedMedication] = useState('');
+  const [dosage, setDosage] = useState('');
   
 
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('price');
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  // Insurance page state
-  const [age, setAge] = useState(" ");
-  const [income, setIncome] = useState(" ");
+  
+  
+  const [age, setAge] = useState('');
+  const [income, setIncome] = useState('');
   const [familySize, setFamilySize] = useState('1');
   const [healthConditions, setHealthConditions] = useState([]);
   
@@ -320,19 +320,32 @@ const MultiPageHealthTool = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Compare Medicine Prices</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Medication Name</label>
-              <select
-                value={selectedMedication}
-                onChange={(e) => setSelectedMedication(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">Select medication...</option>
-                {medications.map(med => (
-                  <option key={med} value={med}>{med}</option>
-                ))}
-              </select>
-            </div>
+           <div className="relative">
+  <label className="block text-sm font-medium text-gray-700 mb-2">Medication Name</label>
+  <input
+    type="text"
+    value={selectedMedication}
+    onChange={(e) => setSelectedMedication(e.target.value)}
+    placeholder="Search medication..."
+    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+  />
+  {selectedMedication.length > 0 && (
+    <ul className="absolute z-10 bg-white border border-gray-300 rounded-lg mt-1 max-h-40 overflow-y-auto w-full shadow-lg">
+      {medications
+        .filter(med => med.toLowerCase().includes(selectedMedication.toLowerCase()))
+        .map((med) => (
+          <li
+            key={med}
+            className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
+            onClick={() => setSelectedMedication(med)}
+          >
+            {med}
+          </li>
+        ))}
+    </ul>
+  )}
+</div>
+
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Dosage</label>
@@ -398,7 +411,7 @@ const MultiPageHealthTool = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Annual Income</label>
               <input
-                type="number"
+                type="text"
                 value={income}
                 onChange={(e) => setIncome(e.target.value)}
                 placeholder="e.g., 50000"
